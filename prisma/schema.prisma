@@ -19,41 +19,131 @@ enum UsersStatus {
   BANNED
 }
 
+enum BookingStatus {
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  PENDING
+}
+
 model Users {
-  id           String        @id @default(uuid())
-  name         String
-  email        String        @unique
-  password     String
-  role         UsersRole     @default(STUDENT)
-  status       UsersStatus   @default(ACTIVE)
-  image        String?
-  phone        String?
-  address      String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  tutorProfile TutorProfile?
+  id        String      @id @default(uuid())
+  name      String
+  email     String      @unique
+  password  String
+  role      UsersRole   @default(STUDENT)
+  status    UsersStatus @default(ACTIVE)
+  image     String?
+  phone     String?
+  address   String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  tutorProfile      TutorProfile?
+  bookingsAsStudent Booking[]     @relation("StudentBookings")
+
+  reviews Review[]
 
   @@map("users")
 }
 
 model TutorProfile {
-  id     String @id @default(uuid())
+  id String @id @default(uuid())
+
   userId String @unique
   user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  bio                String?  @db.Text
-  specialty          String?
-  experience         Int      @default(0)
-  hourlyRate         Decimal? @db.Decimal(10, 2)
-  location           String?
-  expertise          String[] @default([])
-  socialLinks        String[] @default([])
-  totalMentoringMins Int      @default(0)
-  totalSessions      Int      @default(0)
-  averageRating      Float    @default(0)
-  isAvailable        Boolean  @default(true)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
 
-  @@map("tutor_profile")
+  bio        String? @db.Text
+  specialty  String?
+  experience Int     @default(0)
+
+  hourlyRate Decimal? @default(0)
+
+  location    String?
+  expertise   String[] @default([])
+  socialLinks String[] @default([])
+
+  totalMentoringMins Int   @default(0)
+  totalSessions      Int   @default(0)
+  averageRating      Float @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings          Booking[]
+  reviews           Review[]
+  availabilitySlots AvailabilitySlot[]
+
+  @@map("tutor_profiles")
+}
+
+model Booking {
+  id String @id @default(uuid())
+
+  studentId String
+  student   Users  @relation("StudentBookings", fields: [studentId], references: [id], onDelete: Cascade)
+
+  tutorProfileId String
+  tutorProfile   TutorProfile @relation(fields: [tutorProfileId], references: [id], onDelete: Cascade)
+
+  sessionDate DateTime @db.Date
+  startTime   DateTime
+  endTime     DateTime
+
+  status     BookingStatus @default(PENDING)
+  totalPrice Decimal
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  review Review?
+
+  @@map("bookings")
+}
+
+model Category {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  imageUrl      String?
+  topics        String[]       @default([])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  tutorProfiles TutorProfile[]
+
+  @@map("categories")
+}
+
+model Review {
+  id String @id @default(uuid())
+
+  bookingId String  @unique
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Users  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  tutorProfileId String
+  tutorProfile   TutorProfile @relation(fields: [tutorProfileId], references: [id], onDelete: Cascade)
+
+  rating    Float
+  comment   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@map("reviews")
+}
+
+model AvailabilitySlot {
+  id String @id @default(uuid())
+
+  tutorProfileId String
+  tutorProfile   TutorProfile @relation(fields: [tutorProfileId], references: [id], onDelete: Cascade)
+
+  dayOfWeek Int
+  startTime DateTime
+  endTime   DateTime
+
+  @@map("availability_slots")
 }

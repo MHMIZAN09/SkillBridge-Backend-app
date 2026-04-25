@@ -1,3 +1,4 @@
+import console from "node:console";
 import sendResponse from "../../utils/sendResponse";
 import { TutorServices } from "./tutor.service";
 import { Request, Response } from "express";
@@ -34,6 +35,28 @@ const updateTutorProfile = async (req: Request, res: Response) => {
   }
 };
 
+const getTutorById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const tutor = await TutorServices.getTutorById(id as string);
+    console.log("Received request to get tutor by ID:", id);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Tutor found successfully",
+      data: tutor,
+    });
+  } catch (error: any) {
+    sendResponse(res, {
+      statusCode: 500,
+      success: false,
+      message: error.message || "Failed to fetch tutor information",
+    });
+  }
+};
+
 export const TutorControllers = {
   updateTutorProfile,
+  getTutorById,
 };

@@ -10,4 +10,7 @@ router.put(
   authMiddleware(UsersRole.TUTOR),
   TutorControllers.updateTutorProfile,
 );
+
+router.get("/:id", TutorControllers.getTutorById);
+
 export const tutorRoutes = router;

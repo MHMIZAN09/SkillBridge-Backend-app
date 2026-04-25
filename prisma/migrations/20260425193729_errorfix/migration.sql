@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "tutor_profiles" ALTER COLUMN "bio" DROP NOT NULL,
+ALTER COLUMN "specialty" DROP NOT NULL,
+ALTER COLUMN "hourlyRate" DROP NOT NULL,
+ALTER COLUMN "hourlyRate" SET DEFAULT 0;

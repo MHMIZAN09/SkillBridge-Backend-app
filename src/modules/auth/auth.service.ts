@@ -25,6 +25,7 @@ const createUserService = async (payload: any) => {
       await tx.tutorProfile.create({
         data: {
           userId: user.id,
+          
         },
       });
     }
