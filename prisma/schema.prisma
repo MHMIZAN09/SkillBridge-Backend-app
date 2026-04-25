@@ -44,7 +44,7 @@ model TutorProfile {
   bio                String?  @db.Text
   specialty          String?
   experience         Int      @default(0)
-  hourlyRate         Decimal?
+  hourlyRate         Decimal? @db.Decimal(10, 2)
   location           String?
   expertise          String[] @default([])
   socialLinks        String[] @default([])

@@ -53,6 +53,7 @@ const loginUserService = async (payload: any) => {
     email: user.email,
     name: user.name,
     role: user.role,
+    status: user.status,
   };
 
   const token = jwt.sign(userData, process.env.JWT_SECRET!, {

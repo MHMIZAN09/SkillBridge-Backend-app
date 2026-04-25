@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { authRoutes } from "./modules/auth/auth.route";
 import { adminRoutes } from "./modules/admin/admin.route";
+import { tutorRoutes } from "./modules/tutor/tutor.route";
 
 const app: Application = express();
 
@@ -17,5 +18,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/tutor", tutorRoutes);
 
 export default app;
