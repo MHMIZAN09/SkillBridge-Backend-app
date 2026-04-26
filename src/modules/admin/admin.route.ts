@@ -10,4 +10,6 @@ router.get(
 );
 
 router.patch("/users/:id", AdminControllers.updateUsersStatus);
+
+router.get("/dashboard/stats", AdminControllers.getDashboardStats);
 export const adminRoutes = router;

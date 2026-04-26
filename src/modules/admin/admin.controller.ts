@@ -57,7 +57,14 @@ const updateUsersStatus = async (req: Request, res: Response) => {
     });
   }
 };
+
+const getDashboardStats = async (req: Request, res: Response) => {
+  console.log("Received request for dashboard stats");
+};
+
+
 export const AdminControllers = {
   getAllUsers,
   updateUsersStatus,
+  getDashboardStats,
 };
